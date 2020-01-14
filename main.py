@@ -1,51 +1,33 @@
-# Author: Chu Sun
+# OPAL-RT Technologies Inc.
+#This script is provided 'as is', without warranty of any kind.
 
-###############################################################################
-# Imports
-import os
-#import array
-#import Dispatch
+##Import Libraries
+import array
+from ServerRP import Ethernet
+import socket
 import time
-from microgrid import Microgrid
-###############################################################################
-# OS checks and setup 
-try:
-    machine_name = os.uname()[1]
-except AttributeError:
-    print('Not running on controller!')
-    pi = False
-else:
-    if machine_name == 'raspberrypi':
-        print('Running on correct machine!')
-        pi = True
-    else:
-        print('Not running on controller!')
-        pi = False
-        
-###############################################################################
-# Main Code
 
-m  = Microgrid()
-#command = array.array('d',[])
-#for i in range(1):
-#    command.append(1.0)
-init_time=time.time()
-#this is comment
-last_error1=0
-SoC1=0.9   ###0.9
-flag2=1
-StDS=1  ### 0 is SoC1>0.9, otherwise 11
-while 1:
-     start_time = time.time()
-     command=list(m.e.status()) # read your received data
- # ####################put your script here#######################
- 
+##Initiate Communications with the simulator
+## CHANGE THE IP ADDRESS ACCORDINGLY
+## (The IP address is the one from the raspberry PI)
+comm = Ethernet(50000,'192.168.22.143')
 
-     command[0],command[1]
-	 command[0]=command[0]+command[1]+1;
-	 
-	  ########################################
-     command1=tuple(command) # your sent data
-     m.e.send(command1)    # send command
-     elapsed_time = time.time() - start_time
+time.sleep(1)
+counter = 0
 
+# This script will run indefinitely
+while True:
+    
+    ##Obtain measurements from simulator
+    Meas = comm.status()
+    print (Meas)
+    time.sleep(1)
+    counter = counter + 1
+    
+    ##Send commands to the simulator
+    comm.send([12, 24, 45, counter])
+    print('commands:', end="")
+    print(str([12, 24, 45, counter]))
+		
+    time.sleep(1)
+		
