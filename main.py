@@ -42,7 +42,7 @@ while 1:
  
 
      command[0],command[1]
-	 command[0]=command[0]+command[1];
+	 command[0]=command[0]+command[1]+1;
 	 
 	  ########################################
      command1=tuple(command) # your sent data
