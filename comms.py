@@ -4,7 +4,7 @@ import array
 class Ethernet:
     
     BUF_SIZE = 4096  ## 4096
-    HOST_IP = ''
+    HOST_IP = '132.206.62.246'
     PORT = 45000
     
     
@@ -60,7 +60,7 @@ class Ethernet:
         message.append(commands[4])
         message.append(commands[5])
         message.append(commands[6])
-        message.append(commands[7]) 
+        message.append(commands[7])
         # message.append( message_length)
         
         # Send data
