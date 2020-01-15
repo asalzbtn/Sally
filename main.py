@@ -46,7 +46,7 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
                 ESU2EV_enr=0        
     if (ESU2EV_enr>0):
         req_ESU_pwr=0 # we can not charge and discharge battery at the same time
-    ...
+   
     #Mode 3: Gd2EV
     if (pv_power<ev_dmd):
         if ((np.subtract(ev_dmd,pv_power))>avl_ESU_pwr):
