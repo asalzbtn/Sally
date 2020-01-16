@@ -13,11 +13,9 @@ class Ethernet:
 	BUF_SIZE = 1024
 	HOST_IP = '132.206.62.246'
 	PORT = 45000
-	def __init__(self,port,HOST_IP):
+	def __init__(self):
         
 		# Set up socket and bind socket to port and local host IP
-		self.PORT = port
-		self.HOST_IP = HOST_IP
 		self.s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 		self.s.bind((self.HOST_IP, self.PORT))
 		print('Waiting for connection from simulator...')
