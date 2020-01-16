@@ -207,5 +207,5 @@ while 1:
      print(Commands)
      m.e.send(command1)    # send command
      elapsed_time = time.time() - start_time
-     time.sleep(0.1)
+    # time.sleep(0.1)
 
