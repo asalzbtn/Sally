@@ -11,8 +11,8 @@ import array
 class Ethernet:
 
 	BUF_SIZE = 4096
-	HOST_IP = '132.206.62.246'
-	PORT = 50000
+	HOST_IP = '132.206.62.241'
+	PORT = 45000
 	def __init__(self):
         
 		# Set up socket and bind socket to port and local host IP
