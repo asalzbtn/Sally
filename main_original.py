@@ -13,7 +13,7 @@ import time
 from microgrid import Microgrid
 ###############################################################################
 
-def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_ESU_pwr,iteration):
+def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_ESU_pwr):
     PV2EV_enr =0
     ESU2EV_enr = 0
     Gd2EV_ENR=0
@@ -24,23 +24,27 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
     #iteration=0
     deltat = 1
     #ev_dmd_accept= 0
-    counter = 0  
+#    counter = 0   
 #    t=0
-    if iteration==0 :
-        iteration=1
+#    if iteration==0 :
+#        iteration=1
 #        
     
  #Mode 1
     if (pv_power>=ev_dmd):
         PV2EV_enr= ev_dmd*deltat
+        flag=1
     else:
-         PV2EV_enr= pv_power*deltat                  
+         PV2EV_enr= pv_power*deltat
+         flag=1
     # Mode 2: ESU2EV
     if (pv_power<ev_dmd):
         if ((ev_dmd-pv_power)<=avl_ESU_pwr):
                 ESU2EV_enr=(ev_dmd-pv_power)*deltat
+                flag=2
         else :
             ESU2EV_enr=avl_ESU_pwr*deltat
+            flag=2
     else:
          if (pv_power>=ev_dmd):
                 ESU2EV_enr=0        
@@ -53,11 +57,13 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
             if ((ev_dmd-(pv_power+avl_ESU_pwr))<=Gd_cons):
                 Gd2EV_ENR=(ev_dmd-(pv_power+avl_ESU_pwr))*deltat
                 EV_rest=0
-                counter=1
+                flag=3
+               # counter=1
             else:
                 Gd2EV_ENR=Gd_cons*deltat
                 EV_rest=(ev_dmd-(pv_power+avl_ESU_pwr+Gd_cons))*deltat
-                counter=1
+                flag=3
+               # counter=1
         else:
             Gd2EV_ENR=0
             EV_rest=0
@@ -74,9 +80,11 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
                 PV2Gd_enr=0
             else :
                PV2Gd_enr=(pv_power-(ev_dmd+req_ESU_pwr))*deltat
+               flag=5
         else :
             if (req_ESU_pwr==0):
                 PV2Gd_enr=(pv_power-ev_dmd)*deltat
+                flag=5
                    
     if (req_ESU_pwr !=0):
           #Mode 4: PV2ESU
@@ -86,40 +94,44 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
             if(req_ESU_pwr>0):
                 if ((pv_power-ev_dmd)<req_ESU_pwr):
                     PV2ESU_enr=(pv_power-ev_dmd)*deltat
+                    flag=4
                 else:
                     PV2ESU_enr=req_ESU_pwr*deltat
+                    flag=4
             else:
                 if (req_ESU_pwr==0):
                     PV2ESU_enr=0
                     
     # Mode 6: Gd2ESU
-       if ((counter == 1) and ((iteration % (20)) == 0)):
-           if (pv_power<ev_dmd):
-               if ((ev_dmd-pv_power)<Gd_cons):
-                   ii=(ev_dmd-pv_power)
-                   if ((Gd_cons-ii)<=req_ESU_pwr):
-                       Gd2ESU_enr=(Gd_cons-ii)*deltat
+#                    if ((counter == 1) and ((iteration % (20e-6)) == 0)):
+       if (pv_power<ev_dmd):
+          if ((ev_dmd-pv_power)<Gd_cons):
+              ii=(ev_dmd-pv_power)
+              if ((Gd_cons-ii)<=req_ESU_pwr):
+               Gd2ESU_enr=(Gd_cons-ii)*deltat
+               flag=6
                
-                   else:
-                    Gd2ESU_enr=req_ESU_pwr*deltat;
-               
-               else:
-                   Gd2ESU_enr=0
+              else:
+               Gd2ESU_enr=req_ESU_pwr*deltat;
+               flag=6
+          else:
+              Gd2ESU_enr=0
               
     
-           else:
-               if (pv_power>=ev_dmd):
-                   if ((pv_power-ev_dmd)<req_ESU_pwr):
-                       ii=(pv_power-ev_dmd)
-                       if ((req_ESU_pwr-ii)<Gd_cons):
-                           Gd2ESU_enr=(req_ESU_pwr-ii)*deltat
-                       
-                       else:
-                            Gd2ESU_enr= Gd_cons*deltat
-                       
+       else:
+           if (pv_power>=ev_dmd):
+               if ((pv_power-ev_dmd)<req_ESU_pwr):
+                   ii=(pv_power-ev_dmd)
+                   if ((req_ESU_pwr-ii)<Gd_cons):
+                       Gd2ESU_enr=(req_ESU_pwr-ii)*deltat
+                       flag=6
                    else:
-                      if ((pv_power-ev_dmd)>=req_ESU_pwr): 
-                          Gd2ESU_enr=0
+                       Gd2ESU_enr= Gd_cons*deltat
+                       flag=6
+                       
+               else:
+                   if ((pv_power-ev_dmd)>=req_ESU_pwr): 
+                       Gd2ESU_enr=0
                        
     else:
         PV2ESU_enr=0
@@ -127,7 +139,7 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
 #    iteration = iteration + 1
 #    t = iteration
     
-    Commands= [PV2EV_enr,ESU2EV_enr,Gd2EV_ENR,EV_rest,PV2Gd_enr,PV2ESU_enr,Gd2ESU_enr]#ev_dmd_accept,t
+    Commands= [PV2EV_enr,ESU2EV_enr,Gd2EV_ENR,EV_rest,PV2Gd_enr,PV2ESU_enr,Gd2ESU_enr,flag]#ev_dmd_accept,t
     return Commands
 
 
@@ -180,6 +192,8 @@ while 1:
      PV2ESU_enr=0
     
      Gd2ESU_enr=0
+     
+     flag = 0
     
      #t=np.zeros((288,), dtype=(int))
      pv_pow = command[0]
@@ -190,10 +204,9 @@ while 1:
      avl_ESU_pwr = command[5]
      Gd_con = command[6]
      req_ESU_pwr = command[7]
-     iteration = command[8]
     
     
-     Commands = EMS_new(pv_pow,net_ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_con,req_ESU_pwr,iteration)
+     Commands = EMS_new(pv_pow,net_ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_con,req_ESU_pwr)
      PV2EV_enr= Commands[0]
      ESU2EV_enr = Commands[1]
      Gd2EV_ENR=Commands[2]
@@ -201,7 +214,7 @@ while 1:
      PV2Gd_enr=Commands[4]
      PV2ESU_enr=Commands[5]
      Gd2ESU_enr=Commands[6]
-     
+     flag=Commands[7]
      #print(net_ev_dmd)
      print(PV2EV_enr)
 
