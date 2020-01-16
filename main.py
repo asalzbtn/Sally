@@ -199,6 +199,9 @@ while 1:
      PV2Gd_enr=Commands[4]
      PV2ESU_enr=Commands[5]
      Gd2ESU_enr=Commands[6]
+     
+     print(net_ev_dmd)
+     print(PV2EV_enr)
 
      command1=tuple(Commands) # your sent data
      m.e.send(command1)    # send command
