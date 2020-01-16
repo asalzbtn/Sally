@@ -206,4 +206,5 @@ while 1:
      command1=tuple(Commands) # your sent data
      m.e.send(command1)    # send command
      elapsed_time = time.time() - start_time
+     time.sleep(0.1)
 

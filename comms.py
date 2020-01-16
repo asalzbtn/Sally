@@ -21,7 +21,7 @@ class Ethernet:
 		print('Waiting for connection from simulator...')
 		data, self.address = self.s.recvfrom(self.BUF_SIZE)
 		print ('Connected')
-		self.message_header = data[0:7]
+		self.message_header = data[0:6]
 		
 		self.s.close()
 		
@@ -51,7 +51,7 @@ class Ethernet:
 		message_length = bytes(array.array('h', [n*8])) 
 
 		message = self.message_header + message_length+ bytes(array.array('d',commands))
-		
+
 		
 		self.s.sendto(message, self.address)
 		
