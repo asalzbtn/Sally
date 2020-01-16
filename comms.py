@@ -47,14 +47,38 @@ class Ethernet:
 		self.s.bind((self.HOST_IP, self.PORT))
         
         # Rearrange data from array and include message identification
-		n = len(commands)
-		message_length = bytes(array.array('h', [n*8])) 
-
-		message = self.message_header + message_length+ bytes(array.array('d',commands))
-
-		
-		self.s.sendto(message, self.address)
-		
+#		n = len(commands)
+#		message_length = bytes(array.array('h', [n*8])) 
+#
+#		message = self.message_header + message_length+ bytes(array.array('d',commands))
+#
+#		
+#		self.s.sendto(message, self.address)
+#		
+#        # Close socket to prevent accumulation of data
+#		self.s.close()
+        
+        
+        
+          message=array.array('d', [self.message_header])
+        message=array.array('d',[self.message_header])
+#        message_length = array.array('d', [commands]) # h represent unsinged short
+#        message=array.array('d',[])
+#        for i in range(1):
+        message.append(commands[0])
+        message.append(commands[1])
+        message.append(commands[2])
+        message.append(commands[3])
+        message.append(commands[4])
+        message.append(commands[5])
+        message.append(commands[6])
+#        message.append(commands[7]) 
+        # message.append( message_length)
+        
+        # Send data
+        self.s.sendto(bytes(message), self.address)
+        
         # Close socket to prevent accumulation of data
-		self.s.close()
+        self.s.close()
+
 
