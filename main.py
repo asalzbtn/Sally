@@ -164,6 +164,7 @@ StDS=1  ### 0 is SoC1>0.9, otherwise 11
 while 1:
      start_time = time.time()
      command=list(m.e.status()) # read your received data
+     time.sleep(0.5)
  # ####################put your script here#######################
  
      PV2EV_enr=0
@@ -207,5 +208,5 @@ while 1:
      print(Commands)
      m.e.send(command1)    # send command
      elapsed_time = time.time() - start_time
-    # time.sleep(0.1)
+     time.sleep(0.5)
 
