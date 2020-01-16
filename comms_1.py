@@ -63,9 +63,9 @@ class Ethernet:
         # message.append( message_length)
         
         n = len(commands)
-		message_length = bytes(array.array('h', [n*8])) 
+        message_length = bytes(array.array('h', [n*8])) 
 
-		message = self.message_header + message_length+ bytes(array.array('d',commands))
+        message = self.message_header + message_length+ bytes(array.array('d',commands))
         
         # Send data
         self.s.sendto(bytes(message), self.address)

@@ -6,7 +6,7 @@
 
 import socket
 import array
-import pickle
+#import pickle
 
 class Ethernet:
 
