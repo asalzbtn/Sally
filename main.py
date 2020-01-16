@@ -200,10 +200,11 @@ while 1:
      PV2ESU_enr=Commands[5]
      Gd2ESU_enr=Commands[6]
      
-     print(net_ev_dmd)
+     #print(net_ev_dmd)
      print(PV2EV_enr)
 
      command1=tuple(Commands) # your sent data
+     print(Commands)
      m.e.send(command1)    # send command
      elapsed_time = time.time() - start_time
      time.sleep(0.1)
