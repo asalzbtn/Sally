@@ -10,7 +10,7 @@ import time
 ##Initiate Communications with the simulator
 ## CHANGE THE IP ADDRESS ACCORDINGLY
 ## (The IP address is the one from the raspberry PI)
-comm = Ethernet(50000,'132.206.62.246')
+comm = Ethernet(45000,'132.206.62.241')
 
 time.sleep(1)
 counter = 0
