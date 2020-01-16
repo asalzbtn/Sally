@@ -60,7 +60,6 @@ class Ethernet:
         message.append(commands[4])
         message.append(commands[5])
         message.append(commands[6])
-        message.append(commands[7])
         # message.append( message_length)
         
         # Send data
