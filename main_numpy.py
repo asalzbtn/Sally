@@ -7,7 +7,7 @@ import os
 #import Dispatch
 import time
 #import pandas as pd
-#import numpy as np # linear algebra
+import numpy as np # linear algebra
 #import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
 #import matplotlib.pyplot as plt
 from microgrid import Microgrid
@@ -37,8 +37,8 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
          PV2EV_enr= pv_power*deltat                  
     # Mode 2: ESU2EV
     if (pv_power<ev_dmd):
-        if ((ev_dmd-pv_power)<=avl_ESU_pwr):
-                ESU2EV_enr=(ev_dmd-pv_power)*deltat
+        if ((np.subtract(ev_dmd,pv_power))<=avl_ESU_pwr):
+                ESU2EV_enr=(np.subtract(ev_dmd,pv_power))*deltat
         else :
             ESU2EV_enr=avl_ESU_pwr*deltat
     else:
@@ -49,14 +49,14 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
    
     #Mode 3: Gd2EV
     if (pv_power<ev_dmd):
-        if ((ev_dmd-pv_power)>avl_ESU_pwr):
-            if ((ev_dmd-(pv_power+avl_ESU_pwr))<=Gd_cons):
-                Gd2EV_ENR=(ev_dmd-(pv_power+avl_ESU_pwr))*deltat
+        if ((np.subtract(ev_dmd,pv_power))>avl_ESU_pwr):
+            if ((np.subtract(ev_dmd,np.sum((pv_power,avl_ESU_pwr))))<=Gd_cons):
+                Gd2EV_ENR=(np.subtract(ev_dmd,np.sum((pv_power,avl_ESU_pwr))))*deltat
                 EV_rest=0
                # counter=1
             else:
                 Gd2EV_ENR=Gd_cons*deltat
-                EV_rest=(ev_dmd-(pv_power+avl_ESU_pwr+Gd_cons))*deltat
+                EV_rest=(np.subtract(ev_dmd,np.sum((pv_power,avl_ESU_pwr,Gd_cons))))*deltat
                # counter=1
         else:
             Gd2EV_ENR=0
@@ -70,13 +70,13 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
         PV2Gd_enr=0
     else :
         if (req_ESU_pwr>0):
-            if ((pv_power-ev_dmd)<req_ESU_pwr):
+            if ((np.subtract(pv_power,ev_dmd))<req_ESU_pwr):
                 PV2Gd_enr=0
             else :
-               PV2Gd_enr=(pv_power-(ev_dmd+req_ESU_pwr))*deltat
+               PV2Gd_enr=np.subtract((pv_power,np.sum(ev_dmd,req_ESU_pwr)))*deltat
         else :
             if (req_ESU_pwr==0):
-                PV2Gd_enr=(pv_power-ev_dmd)*deltat
+                PV2Gd_enr=np.subtract(pv_power,ev_dmd)*deltat
                    
     if (req_ESU_pwr !=0):
           #Mode 4: PV2ESU
@@ -84,8 +84,8 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
             PV2ESU_enr=0
        else:
             if(req_ESU_pwr>0):
-                if ((pv_power-ev_dmd)<req_ESU_pwr):
-                    PV2ESU_enr=(pv_power-ev_dmd)*deltat
+                if (np.subtract(pv_power,ev_dmd)<req_ESU_pwr):
+                    PV2ESU_enr=np.subtract(pv_power,ev_dmd)*deltat
                 else:
                     PV2ESU_enr=req_ESU_pwr*deltat
             else:
@@ -95,10 +95,10 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
     # Mode 6: Gd2ESU
 #                    if ((counter == 1) and ((iteration % (20e-6)) == 0)):
        if (pv_power<ev_dmd):
-          if ((ev_dmd-pv_power)<Gd_cons):
-              ii=(ev_dmd-pv_power)
-              if ((Gd_cons-ii)<=req_ESU_pwr):
-               Gd2ESU_enr=(Gd_cons-ii)*deltat
+          if (np.subtract(ev_dmd,pv_power)<Gd_cons):
+              ii=np.subtract(ev_dmd,pv_power)
+              if (np.subtract(Gd_cons,ii)<=req_ESU_pwr):
+               Gd2ESU_enr=np.subtract(Gd_cons,ii)*deltat
                
               else:
                Gd2ESU_enr=req_ESU_pwr*deltat;
@@ -109,16 +109,16 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
     
        else:
            if (pv_power>=ev_dmd):
-               if ((pv_power-ev_dmd)<req_ESU_pwr):
-                   ii=(pv_power-ev_dmd)
-                   if ((req_ESU_pwr-ii)<Gd_cons):
-                       Gd2ESU_enr=(req_ESU_pwr-ii)*deltat
+               if (np.subtract(pv_power,ev_dmd)<req_ESU_pwr):
+                   ii=np.subtract(pv_power,ev_dmd)
+                   if (np.subtract(req_ESU_pwr,ii)<Gd_cons):
+                       Gd2ESU_enr=np.subtract(req_ESU_pwr,ii)*deltat
                        
                    else:
                        Gd2ESU_enr= Gd_cons*deltat
                        
                else:
-                   if ((pv_power-ev_dmd)>=req_ESU_pwr): 
+                   if (np.subtract(pv_power,ev_dmd)>=req_ESU_pwr): 
                        Gd2ESU_enr=0
                        
     else:
@@ -166,19 +166,19 @@ while 1:
      command=list(m.e.status()) # read your received data
  # ####################put your script here#######################
  
-     PV2EV_enr=0
+     PV2EV_enr=np.zeros((1,))
     
-     ESU2EV_enr = 0
+     ESU2EV_enr = np.zeros((1,))
     
-     Gd2EV_ENR=0
+     Gd2EV_ENR=np.zeros((1,))
     
-     EV_rest=0
+     EV_rest=np.zeros((1,))
     
-     PV2Gd_enr=0
+     PV2Gd_enr=np.zeros((1,))
     
-     PV2ESU_enr=0
+     PV2ESU_enr=np.zeros((1,))
     
-     Gd2ESU_enr=0
+     Gd2ESU_enr=np.zeros((1,))
     
      #t=np.zeros((288,), dtype=(int))
      pv_pow = command[0]
