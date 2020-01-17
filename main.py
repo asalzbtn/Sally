@@ -307,9 +307,9 @@ while 1:
      ev_dmd_3=commands3[3]
      
      commands2=ev_accept(ev_dmd_accept,PV2EV_enr,ESU2EV_enr,Gd2EV_ENR)
-     ev_dmd_1_avl=commands2[1]
-     ev_dmd_2_avl=commands2[2]
-     ev_dmd_3_avl=commands2[3]
+     ev_dmd_1_avl=commands2[0]
+     ev_dmd_2_avl=commands2[1]
+     ev_dmd_3_avl=commands2[2]
      
      Commands.append('commands3','commands2')
      
