@@ -17,7 +17,6 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
     PV2EV_enr =0
     ESU2EV_enr = 0
     Gd2EV_ENR=0
-    EV_rest=0
     PV2Gd_enr=0
     PV2ESU_enr=0
     Gd2ESU_enr=0
@@ -136,7 +135,7 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
 #    iteration = iteration + 1
 #    t = iteration
     
-    Commands= [PV2EV_enr,ESU2EV_enr,Gd2EV_ENR,EV_rest,PV2Gd_enr,PV2ESU_enr,Gd2ESU_enr]#ev_dmd_accept,t
+    Commands= [PV2EV_enr,ESU2EV_enr,Gd2EV_ENR,PV2Gd_enr,PV2ESU_enr,Gd2ESU_enr]#ev_dmd_accept,t
     return Commands
 
 ###############################################################################
@@ -295,10 +294,9 @@ while 1:
      PV2EV_enr= Commands[0]
      ESU2EV_enr = Commands[1]
      Gd2EV_ENR=Commands[2]
-     EV_rest=Commands[3]
-     PV2Gd_enr=Commands[4]
-     PV2ESU_enr=Commands[5]
-     Gd2ESU_enr=Commands[6]
+     PV2Gd_enr=Commands[3]
+     PV2ESU_enr=Commands[4]
+     Gd2ESU_enr=Commands[5]
      
      commands3=EV_acc_fn(avl_ESU_pwr, pv_pow ,Gd_con,net_ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,ev_dmd_1_temp,ev_dmd_2_temp,ev_dmd_3_temp)
      ev_dmd_accept=commands3[0]
