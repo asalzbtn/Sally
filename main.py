@@ -311,7 +311,7 @@ while 1:
      ev_dmd_2_avl=commands2[1]
      ev_dmd_3_avl=commands2[2]
      
-     Commands.append('commands3','commands2')
+     Commands = Commands + commands3 + commands2
      
      
      
