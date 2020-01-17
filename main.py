@@ -314,7 +314,7 @@ while 1:
      
      
      #print(net_ev_dmd)
-     print(PV2EV_enr)
+     print(Commands)
 
      command1=tuple(Commands) # your sent data
      print(command1)
