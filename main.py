@@ -101,7 +101,7 @@ def  EMS_new(pv_power,ev_dmd,ev_dmd_1,ev_dmd_2,ev_dmd_3,avl_ESU_pwr,Gd_cons,req_
                     PV2ESU_enr=0
                     
     # Mode 6: Gd2ESU
-       if ((counter == 1) and ((iteration % (20)) == 0)):
+       if ((counter != 1) and ((iteration % (20)) == 0)):
            if (pv_power<ev_dmd):
                if ((ev_dmd-pv_power)<Gd_cons):
                    ii=(ev_dmd-pv_power)
