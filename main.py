@@ -241,7 +241,7 @@ StDS=1  ### 0 is SoC1>0.9, otherwise 11
 while 1:
      start_time = time.time()
      command=list(m.e.status()) # read your received data
-     time.sleep(0.3)
+     
  # ####################put your script here#######################
  
      PV2EV_enr=0
